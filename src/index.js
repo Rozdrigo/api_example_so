@@ -11,7 +11,7 @@ if (!PORT) {
 APP.get("/", (req, res) => {
   console.log("acess event");
   const clientInfo = {
-    message: `Aplicação ${OS.hostname()} :: ${PORT}}`,
+    message: `Aplicação ${OS.hostname()} :: ${PORT}`,
     method: req.method,
     protocol: req.protocol,
     host: req.get("host"),
