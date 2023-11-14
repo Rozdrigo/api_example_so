@@ -4,12 +4,30 @@ const OS = require("os");
 const PORT = process.argv[2];
 
 if (!PORT) {
-  console.log(PORT);
-  throw new Error("É necessario informar o parametro de porta");
+  throw new Error("🚪 É necessario informar o parametro de porta");
 }
 
+let requisitions_in_seconds = 5;
+let requisitions_amount = 0;
+
 APP.get("/", (req, res) => {
-  console.log("acess event");
+  if (requisitions_amount >= requisitions_in_seconds) {
+    console.log("🔃 Limite atingido, redirecionando requisição")
+    res.redirect("/");
+    return;
+  }
+  requisitions_amount++;
+  setTimeout(() => {
+    requisitions_amount--;
+  }, 10000);
+  const remainingRequests = requisitions_in_seconds - requisitions_amount;
+  const progressBar = Array.from({ length: requisitions_in_seconds }, (_, index) =>
+    index < remainingRequests ? "#" : "-"
+  ).join("");
+
+  console.log(
+    `🔴 Requisições restantes: ${remainingRequests}/${requisitions_in_seconds} [${progressBar}]`
+  );
   const clientInfo = {
     message: `Aplicação ${OS.hostname()} :: ${PORT}`,
     method: req.method,
@@ -22,5 +40,5 @@ APP.get("/", (req, res) => {
 });
 
 APP.listen(PORT, () => {
-  console.log(`Aplicação rodando na porta ${PORT}`);
+  console.log(`🚀 Aplicação rodando na porta ${PORT}`);
 });
